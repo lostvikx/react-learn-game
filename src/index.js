@@ -1,34 +1,49 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
+import calcWinner from "./calcWinner.js"
 
 // Square is a controlled component, Board has full control over it.
-class Square extends React.Component {
-  render() {
-    return (
-      <button 
-        className="square" 
-        onClick={() => this.props.onClick()}
-      >
-        {this.props.value}
-      </button>
-    );
-  }
-}
+const Square = (props) => {
+  return (
+    <button
+      className="square"
+      onClick={props.onClick}
+    >
+      {props.value}
+    </button>
+  );
+};
 
 class Board extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       squares: Array(9).fill(null),
+      xIsNext: true,
     };
+    // this.handleClick = this.handleClick.bind(this);
+    // this.renderSquare = this.renderSquare.bind(this);
   }
 
   handleClick(i) {
     // Immutability is important
     const squares = this.state.squares.slice();
-    squares[i] = "X";
-    this.setState({squares: squares});
+
+    if (calcWinner(squares)) {
+      console.log("Game Over!");
+      return;
+    } else if (squares[i]) {
+      console.log("Already filled!");
+      return;
+    }
+
+    squares[i] = this.state.xIsNext ? "X" : "O";
+    // setState is asynchronous
+    this.setState({
+      squares: squares,
+      xIsNext: !this.state.xIsNext,
+    });
   }
 
   renderSquare(i) {
@@ -39,7 +54,14 @@ class Board extends React.Component {
   }
 
   render() {
-    const status = 'Next player: X';
+    let status;
+    const winner = calcWinner(this.state.squares);
+
+    if (winner) {
+      status = "Winner: " + winner;
+    } else {
+      status = `Next player: ${this.state.xIsNext ? "X" : "O"}`;
+    }
 
     return (
       <div>
