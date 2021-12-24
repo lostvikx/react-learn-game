@@ -53,12 +53,13 @@ class Game extends React.Component {
       history: [{
         squares: Array(9).fill(null),
       },],
+      stepNum: 0,
       xIsNext: true,
     };
   }
 
   handleClick(i) {
-    const history = this.state.history;
+    const history = this.state.history.slice(0, this.state.stepNum + 1);
     const curHist = history[history.length - 1];
     // Immutability is important
     const squares = curHist.squares.slice();
@@ -79,15 +80,44 @@ class Game extends React.Component {
       history: history.concat([{
         squares: squares,
       }]),
+      stepNum: history.length,
       xIsNext: !this.state.xIsNext,
+    });
+  }
+
+  jumpTo(step) {
+    console.log("jump");
+
+    // Only properties mentioned in setState method gets updated, leaving the remaining state properties as they were.
+    this.setState({
+      stepNumber: step,
+      xIsNext: (step % 2) === 0,
     });
   }
 
   render() {
     const history = this.state.history;
-    const curHist = history[history.length - 1];
+    const curHist = history[this.state.stepNum];
+    // console.log(curHist);
 
     const winner = calcWinner(curHist.squares);
+
+    // _step: {squares:[...]}
+    // move: index of step {}
+    const moves = history.map((_step, move) => {
+      const text = move 
+        ? `Go to move #${move}`
+        : "Go to start";
+
+        // Always assign proper keys whenever you build dynamic lists.
+        return (
+          <li key={move}>
+            <button onClick={() => this.jumpTo(move)}>
+              {text}
+            </button>
+          </li>
+        );
+    });
 
     let status;
     if (winner) {
@@ -106,7 +136,7 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{/* TODO */}</ol>
+          <ul>{moves}</ul>
         </div>
       </div>
     );
