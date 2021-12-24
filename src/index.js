@@ -56,6 +56,7 @@ class Game extends React.Component {
       stepNum: 0,
       xIsNext: true,
     };
+    this.jumpTo = this.jumpTo.bind(this);
   }
 
   handleClick(i) {
@@ -74,31 +75,34 @@ class Game extends React.Component {
     }
 
     squares[i] = this.state.xIsNext ? "X" : "O";
+
     // setState is asynchronous
     this.setState({
       // used concat instead of push, because it doesn't mutate the array.
       history: history.concat([{
-        squares: squares,
+        squares: squares
       }]),
       stepNum: history.length,
       xIsNext: !this.state.xIsNext,
     });
+
+    // setTimeout(() => console.log(this.state), 2000);
   }
 
   jumpTo(step) {
-    console.log("jump");
-
+    console.log("jumped");
     // Only properties mentioned in setState method gets updated, leaving the remaining state properties as they were.
     this.setState({
-      stepNumber: step,
+      stepNum: step,
       xIsNext: (step % 2) === 0,
     });
+
+    // setTimeout(() => console.log(this.state), 2000);
   }
 
   render() {
     const history = this.state.history;
     const curHist = history[this.state.stepNum];
-    // console.log(curHist);
 
     const winner = calcWinner(curHist.squares);
 
