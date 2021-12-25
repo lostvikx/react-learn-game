@@ -138,7 +138,10 @@ class Game extends React.Component {
         // Always assign proper keys whenever you build dynamic lists.
         return (
           <li key={move}>
-            <button onClick={() => this.jumpTo(move)}>
+            <button 
+              onClick={() => this.jumpTo(move)}
+              className="move-btn"
+            >
               {text}
             </button>
           </li>
@@ -161,7 +164,7 @@ class Game extends React.Component {
           />
         </div>
         <div className="game-info">
-          <div>{status}</div>
+          <div className="status">{status}</div>
           <ul>{moves}</ul>
         </div>
       </div>
