@@ -49,13 +49,17 @@ class Board extends React.Component {
 class Game extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       history: [{
         squares: Array(9).fill(null),
+        loc: Array(9).fill({col: null, row: null}),
+        squareIndexClicked: [],
       },],
       stepNum: 0,
       xIsNext: true,
     };
+
     this.jumpTo = this.jumpTo.bind(this);
   }
 
@@ -64,6 +68,7 @@ class Game extends React.Component {
     const curHist = history[history.length - 1];
     // Immutability is important
     const squares = curHist.squares.slice();
+    const location = curHist.loc.slice();
 
     // If we have a winner or square is filled, return early and don't setState.
     if (calcWinner(squares)) {
@@ -76,11 +81,25 @@ class Game extends React.Component {
 
     squares[i] = this.state.xIsNext ? "X" : "O";
 
+    const colRowMap = [];
+
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        colRowMap.push({ col: j + 1, row: i + 1 });
+      }
+    }
+
+    location[i] = colRowMap[i];
+
+    // console.log(colRowMap);
+
     // setState is asynchronous
     this.setState({
       // used concat instead of push, because it doesn't mutate the array.
       history: history.concat([{
-        squares: squares
+        squares: squares,
+        loc: location,
+        squareIndexClicked: curHist.squareIndexClicked.concat(i),
       }]),
       stepNum: history.length,
       xIsNext: !this.state.xIsNext,
@@ -108,9 +127,14 @@ class Game extends React.Component {
 
     // _step: {squares:[...]}
     // move: index of step {}
-    const moves = history.map((_step, move) => {
+    const moves = history.map(({squares, loc, squareIndexClicked}, move) => {
+
+      const locIndex = squareIndexClicked.slice(-1)[0];
+      
+      // if (this.state.xIsNext)
+
       const text = move 
-        ? `Go to move #${move}`
+        ? `Go to move #${move} Loc: (${loc[locIndex].col}, ${loc[locIndex].row})`
         : "Go to start";
 
         // Always assign proper keys whenever you build dynamic lists.
