@@ -60,7 +60,7 @@ button {
   margin-bottom: 0.5rem;
 }
 
-.move-btn:focus {
+.bold-txt {
   font-weight: 800;
 }
 

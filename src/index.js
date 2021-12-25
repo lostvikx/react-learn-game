@@ -140,7 +140,7 @@ class Game extends React.Component {
           <li key={move}>
             <button 
               onClick={() => this.jumpTo(move)}
-              className="move-btn"
+              className={`move-btn ${(move === this.state.stepNum) ? "bold-txt" : ""}`}
             >
               {text}
             </button>
