@@ -17,6 +17,7 @@ ol, ul {
 
 .status {
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .square {
@@ -87,5 +88,5 @@ button {
 }
 
 .winner {
-  background: green;
+  background: rgb(116, 199, 116);
 }
