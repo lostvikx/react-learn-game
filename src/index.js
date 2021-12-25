@@ -131,8 +131,6 @@ class Game extends React.Component {
 
       const locIndex = squareIndexClicked.slice(-1)[0];
       
-      // if (this.state.xIsNext)
-
       const text = move 
         ? `Go to move #${move} Loc: (${loc[locIndex].col}, ${loc[locIndex].row})`
         : "Go to start";
