@@ -1,5 +1,6 @@
-// squares are array of the 9 boxes, their values
+// squares are array of the 9 boxes, their values ["X", "O"]
 const calcWinner = (squares) => {
+  let winIndices = [];
   const sqWinIndices = [
     [0, 1, 2],
     [3, 4, 5],
@@ -15,10 +16,15 @@ const calcWinner = (squares) => {
     const [a, b, c] = sqWinIndices[i];
 
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      // console.log(sqWinIndices[i]);
+      if (winIndices.length < 3) {
+        sqWinIndices[i].forEach(i => winIndices.push(i));
+      }
+      // console.log(winIndices);
+      return [squares[a], winIndices];
     }
   }
   return null;
 };
 
-export default calcWinner;
+export {calcWinner};

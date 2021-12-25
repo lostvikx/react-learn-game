@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import calcWinner from "./calcWinner.js"
+import { calcWinner } from "./calcWinner.js"
 
 // Square is a controlled component, Board has full control over it.
 const Square = (props) => {
   return (
     <button
-      className="square"
+      className={`square${(props.color !== null && props.color.includes(props.index)) ? " winner" : ""}`}
       onClick={props.onClick}
     >
       {props.value}
@@ -21,6 +21,8 @@ class Board extends React.Component {
       value={this.props.squares[i]} 
       onClick={() => this.props.onClick(i)}
       key={`square_${i}`}
+      color={this.props.winner}
+      index={i}
     />;
   }
 
@@ -84,6 +86,7 @@ class Game extends React.Component {
       stepNum: 0,
       xIsNext: true,
       reverse: false,
+      winInd: null,
     };
 
     this.jumpTo = this.jumpTo.bind(this);
@@ -103,7 +106,8 @@ class Game extends React.Component {
     const location = curHist.loc.slice();
 
     // If we have a winner or square is filled, return early and don't setState.
-    if (calcWinner(squares)) {
+    const winner = calcWinner(squares);
+    if (winner) {
       console.log("Game Over!");
       return;
     } else if (squares[i]) {
@@ -138,15 +142,37 @@ class Game extends React.Component {
         xIsNext: !this.state.xIsNext,
       });
     }
+    
+    setTimeout(() => {
+      const testHist = this.state.history.slice(0, this.state.stepNum + 1);
+      const testSq = testHist[testHist.length - 1].squares.slice();
+      const testWin = calcWinner(testSq);
+
+      if (testWin) {
+        // console.log("winns");
+        this.setState({
+          winInd: testWin[1],
+        });
+      }
+    }, 0);
+    
     // setTimeout(() => console.log(this.state), 2000);
   }
 
   jumpTo(step) {
     console.log("Jumped");
+
+    let winInd = calcWinner(this.state.history[step].squares);
+
+    if (winInd === null) {
+      winInd = Array(2).fill(null)
+    }
+
     // Only properties mentioned in setState method gets updated, leaving the remaining state properties as they were.
     this.setState({
       stepNum: step,
       xIsNext: (step % 2) === 0,
+      winInd: winInd[1],
     });
 
     // setTimeout(() => console.log(this.state), 2000);
@@ -201,7 +227,7 @@ class Game extends React.Component {
 
     let status;
     if (winner) {
-      status = "Winner: " + winner;
+      status = "Winner: " + winner[0];
     } else {
       status = `Next player: ${this.state.xIsNext ? "X" : "O"}`;
     }
@@ -212,6 +238,7 @@ class Game extends React.Component {
           <Board 
             squares={curHist.squares}
             onClick={(i) => this.handleClick(i)}
+            winner={this.state.winInd}
           />
         </div>
         <div className="game-info">

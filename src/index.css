@@ -85,3 +85,7 @@ button {
   padding: 0 1em;
   margin: 0 0.2rem;
 }
+
+.winner {
+  background: green;
+}
