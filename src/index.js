@@ -26,11 +26,14 @@ class Board extends React.Component {
 
   render() {
     const board = [];
+    
     for (let r=0; r < 9; r+=3) {
       const row = [];
+
       for (let i=r; i < r+3; i++) {
         row.push(this.renderSquare(i));
       }
+
       board.push(row);
     }
 
@@ -38,7 +41,10 @@ class Board extends React.Component {
     
     const fullBoard = board.map((squares, index) => {
       return (
-        <div className="board-row" key={`row_${index}`}>
+        <div 
+          className="board-row" 
+          key={`row_${index}`}
+        >
           {squares}
         </div>
       );
