@@ -60,6 +60,17 @@ class Board extends React.Component {
   }
 }
 
+const SortBtn = (props) => {
+  return (
+    <button 
+      className="sort-btn"
+      onClick={props.handleSort}
+    >
+      View Reverse Moves      
+    </button>
+  );
+}
+
 class Game extends React.Component {
   constructor(props) {
     super(props);
@@ -72,13 +83,20 @@ class Game extends React.Component {
       },],
       stepNum: 0,
       xIsNext: true,
+      reverse: false,
     };
 
     this.jumpTo = this.jumpTo.bind(this);
   }
 
   handleClick(i) {
+    if (this.state.reverse) {
+      console.log("Reverse Baby, can't do shit!");
+      return;
+    }
+
     const history = this.state.history.slice(0, this.state.stepNum + 1);
+
     const curHist = history[history.length - 1];
     // Immutability is important
     const squares = curHist.squares.slice();
@@ -108,26 +126,41 @@ class Game extends React.Component {
     // console.log(colRowMap);
 
     // setState is asynchronous
+    if (!this.state.reverse) {
+      this.setState({
+        // used concat instead of push, because it doesn't mutate the array.
+        history: history.concat([{
+          squares: squares,
+          loc: location,
+          squareIndexClicked: curHist.squareIndexClicked.concat([i]),
+        }]),
+        stepNum: history.length,
+        xIsNext: !this.state.xIsNext,
+      });
+    }
+    // setTimeout(() => console.log(this.state), 2000);
+  }
+
+  jumpTo(step) {
+    console.log("Jumped");
+    // Only properties mentioned in setState method gets updated, leaving the remaining state properties as they were.
     this.setState({
-      // used concat instead of push, because it doesn't mutate the array.
-      history: history.concat([{
-        squares: squares,
-        loc: location,
-        squareIndexClicked: curHist.squareIndexClicked.concat(i),
-      }]),
-      stepNum: history.length,
-      xIsNext: !this.state.xIsNext,
+      stepNum: step,
+      xIsNext: (step % 2) === 0,
     });
 
     // setTimeout(() => console.log(this.state), 2000);
   }
 
-  jumpTo(step) {
-    console.log("jumped");
-    // Only properties mentioned in setState method gets updated, leaving the remaining state properties as they were.
+  handleSort() {
+    // console.log(this.state.history);
+    const revHistory = this.state.history
+      .slice()
+      .reverse();
+    
     this.setState({
-      stepNum: step,
-      xIsNext: (step % 2) === 0,
+      history: revHistory,
+      reverse: !this.state.reverse,
     });
 
     // setTimeout(() => console.log(this.state), 2000);
@@ -143,23 +176,27 @@ class Game extends React.Component {
     // move: index of step {}
     const moves = history.map(({squares, loc, squareIndexClicked}, move) => {
 
-      const locIndex = squareIndexClicked.slice(-1)[0];
-      
-      const text = move 
-        ? `Go to move #${move} Loc: (${loc[locIndex].col}, ${loc[locIndex].row})`
-        : "Go to start";
+      let locIndex = squareIndexClicked.slice(-1)[0];
 
-        // Always assign proper keys whenever you build dynamic lists.
-        return (
-          <li key={move}>
-            <button 
-              onClick={() => this.jumpTo(move)}
-              className={`move-btn ${(move === this.state.stepNum) ? "bold-txt" : ""}`}
-            >
-              {text}
-            </button>
-          </li>
-        );
+      let text = null;
+      try {
+        text = `Go to move #${move} Loc: (${loc[locIndex].col}, ${loc[locIndex].row})`
+      } catch(err) {
+        // console.error(err);
+        text = "Go to start"
+      }
+
+      // Always assign proper keys whenever you build dynamic lists.
+      return (
+        <li key={move}>
+          <button 
+            onClick={() => this.jumpTo(move)}
+            className={`move-btn ${(move === this.state.stepNum) ? "bold-txt" : ""}`}
+          >
+            {text}
+          </button>
+        </li>
+      );
     });
 
     let status;
@@ -181,6 +218,7 @@ class Game extends React.Component {
           <div className="status">{status}</div>
           <ul>{moves}</ul>
         </div>
+        <div className="other-options"><SortBtn handleSort={() => this.handleSort()}/></div>
       </div>
     );
   }

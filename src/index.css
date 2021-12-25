@@ -4,7 +4,8 @@ body {
 }
 
 ol, ul {
-  padding-left: 30px;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
   list-style-type: none;
 }
 
@@ -22,15 +23,15 @@ ol, ul {
   background: #fff;
   border: 1px solid #999;
   float: left;
-  font-size: 24px;
+  font-size: 4rem;
   font-weight: bold;
-  line-height: 34px;
-  height: 34px;
+  line-height: 5rem;
+  height: 5rem;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
   text-align: center;
-  width: 34px;
+  width: 5rem;
 }
 
 .square:focus {
@@ -44,10 +45,11 @@ ol, ul {
 .game {
   display: flex;
   flex-direction: row;
+  gap: 2rem;
 }
 
 .game-info {
-  margin-left: 20px;
+  width: 245px;
 }
 
 button {
@@ -58,6 +60,7 @@ button {
   border: solid black 1px;
   padding: 0.35em;
   margin-bottom: 0.5rem;
+  width: 100%
 }
 
 .bold-txt {
@@ -65,7 +68,20 @@ button {
 }
 
 .status {
-  width: 100%;
-  text-align: center;
   font-size: 1rem;
+  padding: 0 2em;
+  margin: 0.5rem auto;
+}
+
+.sort-btn {
+  margin: 0.5rem auto;
+  border: solid black 1px;
+  padding: 0.35em;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+.other-options {
+  padding: 0 1em;
+  margin: 0 0.2rem;
 }
