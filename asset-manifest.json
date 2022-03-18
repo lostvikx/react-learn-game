@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/react-learn-game/static/css/main.9c683902.css",
-    "main.js": "/react-learn-game/static/js/main.717b55ee.js",
+    "main.js": "/react-learn-game/static/js/main.ca2d172c.js",
     "index.html": "/react-learn-game/index.html",
     "main.9c683902.css.map": "/react-learn-game/static/css/main.9c683902.css.map",
-    "main.717b55ee.js.map": "/react-learn-game/static/js/main.717b55ee.js.map"
+    "main.ca2d172c.js.map": "/react-learn-game/static/js/main.ca2d172c.js.map"
   },
   "entrypoints": [
     "static/css/main.9c683902.css",
-    "static/js/main.717b55ee.js"
+    "static/js/main.ca2d172c.js"
   ]
 }
